@@ -1,0 +1,16 @@
+<h1>Delete mood entry</h1>
+
+<p>Are you sure you want to delete this entry?</p>
+
+<ul>
+  <li>Mood: {{ object.mood }}</li>
+  <li>Stress: {{ object.stress }}</li>
+  <li>Note: {{ object.note }}</li>
+</ul>
+
+<form method="post">
+  {% csrf_token %}
+  <button type="submit">Yes, delete</button>
+</form>
+
+<p><a href="{% url 'mood_list' %}">Cancel</a></p>

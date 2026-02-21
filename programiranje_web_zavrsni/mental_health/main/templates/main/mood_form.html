@@ -1,9 +1,9 @@
-<h1>New Mood Entry</h1>
+<h1>Add new mood</h1>
 
 <form method="post">
   {% csrf_token %}
   {{ form.as_p }}
-  <button type="submit">Save</button>
+  <button type="submit">Save mood</button>
 </form>
 
 <p><a href="{% url 'mood_list' %}">Back to list</a></p>

@@ -1,5 +1,25 @@
-<p><a href="{% url 'mood_create' %}">+ Add new mood entry</a></p>
 <h1>Mood Entries</h1>
+
+{% if user.is_authenticated %}
+  <p>
+    Logged in as <strong>{{ user.username }}</strong>
+  </p>
+
+  <p>
+    <a href="{% url 'mood_create' %}">+ Add new mood entry</a>
+  </p>
+
+  <form method="post" action="{% url 'logout' %}" style="margin-bottom:20px;">
+    {% csrf_token %}
+    <button type="submit">Logout</button>
+  </form>
+{% else %}
+  <p>
+    <a href="{% url 'login' %}">Login</a> to add mood entries.
+  </p>
+{% endif %}
+
+<hr>
 
 {% for mood in moods %}
     <p>
@@ -7,6 +27,8 @@
         Mood: {{ mood.mood }} |
         Stress: {{ mood.stress }} |
         Note: {{ mood.note }}
+        <a href="{% url 'mood_edit' mood.pk %}">Edit</a> |
+        <a href="{% url 'mood_delete' mood.pk %}">Delete</a>
     </p>
 {% empty %}
     <p>Nema podataka.</p>
