@@ -1,0 +1,12 @@
+<h1>Mood Entries</h1>
+
+{% for mood in moods %}
+    <p>
+        User: {{ mood.user }} |
+        Mood: {{ mood.mood }} |
+        Stress: {{ mood.stress }} |
+        Note: {{ mood.note }}
+    </p>
+{% empty %}
+    <p>Nema podataka.</p>
+{% endfor %}
