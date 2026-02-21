@@ -1,16 +1,13 @@
-<h1>Dashboard</h1>
+{% extends "main/base.html" %}
 
+<h1>Dashboard</h1>
+{% block content %}
 <form method="get" style="margin-bottom: 16px;">
   <input type="text" name="q" value="{{ q }}" placeholder="Search moods, tags, journals..." />
   <button type="submit">Search</button>
   {% if q %}
     <a href="{% url 'dashboard' %}">Clear</a>
   {% endif %}
-</form>
-
-<form method="post" action="{% url 'logout' %}" style="margin-bottom: 20px;">
-  {% csrf_token %}
-  <button type="submit">Logout</button>
 </form>
 
 <hr>
@@ -57,3 +54,5 @@
 {% empty %}
   <p>Nema journal entry-ja.</p>
 {% endfor %}
+
+{% endblock %}

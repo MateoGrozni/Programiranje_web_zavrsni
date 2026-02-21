@@ -1,3 +1,5 @@
+{% extends "main/base.html" %}
+{% block content %}
 <h1>Add new mood</h1>
 
 <form method="post">
@@ -7,3 +9,4 @@
 </form>
 
 <p><a href="{% url 'mood_list' %}">Back to list</a></p>
+{% endblock %}
