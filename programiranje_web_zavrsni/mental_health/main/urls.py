@@ -1,7 +1,8 @@
 from django.urls import path
-from .views import MoodListView, home
+from .views import MoodListView, home, MoodCreateView
 
 urlpatterns = [
     path("", home, name="home"),
     path("moods/", MoodListView.as_view(), name="mood_list"),
+    path("moods/new/", MoodCreateView.as_view(), name="mood_create"),
 ]
