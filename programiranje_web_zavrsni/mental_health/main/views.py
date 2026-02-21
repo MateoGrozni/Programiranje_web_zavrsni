@@ -1,12 +1,16 @@
 from django.http import HttpResponse
+from django.contrib.auth import login
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from .models import MoodEntry
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
+from .models import MoodEntry, Tag, JournalEntry
 from django.contrib.auth.forms import UserCreationForm
 
 def home(request):
-    return HttpResponse("Mental health tracker radi ✅")
+    if request.user.is_authenticated:
+        return redirect("dashboard")
+    return redirect("login")
 
 class MoodListView(LoginRequiredMixin, ListView):
     model = MoodEntry
@@ -56,3 +60,35 @@ class SignupView(CreateView):
         response = super().form_valid(form)
         login(self.request, self.object)  # auto-login nakon registracije
         return response
+
+class DashboardView(LoginRequiredMixin, TemplateView):
+    template_name = "main/dashboard.html"
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+
+        q = (self.request.GET.get("q") or "").strip()
+        user = self.request.user
+
+        moods_qs = MoodEntry.objects.filter(user=user).order_by("-id")
+        tags_qs = Tag.objects.all().order_by("name")
+        journals_qs = JournalEntry.objects.filter(user=user).order_by("-id")
+
+        if q:
+            # Mood: pretraga po note (i po mood/stress ako su string/int ovisi kako si modelirao)
+            moods_qs = moods_qs.filter(note__icontains=q)
+
+            # Tag: po nazivu
+            tags_qs = tags_qs.filter(name__icontains=q)
+
+            # Journal: po title/content (ako imaš samo content, makni title dio)
+            journals_qs = journals_qs.filter(
+                title__icontains=q
+            ) | journals_qs.filter(content__icontains=q)
+
+        ctx["q"] = q
+        ctx["moods"] = moods_qs[:10]      # limit da stranica ne bude preduga
+        ctx["tags"] = tags_qs[:30]
+        ctx["journals"] = journals_qs[:10]
+
+        return ctx

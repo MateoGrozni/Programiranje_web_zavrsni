@@ -1,0 +1,59 @@
+<h1>Dashboard</h1>
+
+<form method="get" style="margin-bottom: 16px;">
+  <input type="text" name="q" value="{{ q }}" placeholder="Search moods, tags, journals..." />
+  <button type="submit">Search</button>
+  {% if q %}
+    <a href="{% url 'dashboard' %}">Clear</a>
+  {% endif %}
+</form>
+
+<form method="post" action="{% url 'logout' %}" style="margin-bottom: 20px;">
+  {% csrf_token %}
+  <button type="submit">Logout</button>
+</form>
+
+<hr>
+
+<h2>Moods (latest)</h2>
+<p><a href="{% url 'mood_create' %}">+ Add mood</a> | <a href="{% url 'mood_list' %}">View all</a></p>
+
+{% for mood in moods %}
+  <p>
+    Mood: {{ mood.mood }} |
+    Stress: {{ mood.stress }} |
+    Note: {{ mood.note }}
+    | <a href="{% url 'mood_edit' mood.pk %}">Edit</a>
+    | <a href="{% url 'mood_delete' mood.pk %}">Delete</a>
+  </p>
+{% empty %}
+  <p>Nema mood zapisa.</p>
+{% endfor %}
+
+<hr>
+
+<h2>Tags</h2>
+{# Ako imaš tag create/list rute kasnije, ovdje ćemo dodati linkove #}
+
+{% for tag in tags %}
+  <span style="display:inline-block; padding:4px 8px; border:1px solid #ccc; margin:2px;">
+    {{ tag.name }}
+  </span>
+{% empty %}
+  <p>Nema tagova.</p>
+{% endfor %}
+
+<hr>
+
+<h2>Journal entries (latest)</h2>
+{# Ako imaš journal create/list rute kasnije, ovdje ćemo dodati linkove #}
+
+{% for j in journals %}
+  <div style="border:1px solid #ddd; padding:10px; margin:8px 0;">
+    <strong>{{ j.title }}</strong><br>
+    <small>{{ j.created_at }}</small>
+    <p>{{ j.content|truncatechars:200 }}</p>
+  </div>
+{% empty %}
+  <p>Nema journal entry-ja.</p>
+{% endfor %}
