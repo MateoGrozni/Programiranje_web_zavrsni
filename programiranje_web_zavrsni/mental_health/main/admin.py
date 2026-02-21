@@ -1,3 +1,8 @@
 from django.contrib import admin
+from django.contrib import admin
+from .models import Profile, MoodEntry, JournalEntry, Tag
 
-# Register your models here.
+admin.site.register(Profile)
+admin.site.register(MoodEntry)
+admin.site.register(JournalEntry)
+admin.site.register(Tag)
