@@ -3,6 +3,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .models import MoodEntry
+from django.contrib.auth.forms import UserCreationForm
 
 def home(request):
     return HttpResponse("Mental health tracker radi ✅")
@@ -45,3 +46,13 @@ class MoodDeleteView(LoginRequiredMixin, DeleteView):
     def get_queryset(self):
         # sprječava delete tuđih unosa
         return MoodEntry.objects.filter(user=self.request.user)
+
+class SignupView(CreateView):
+    form_class = UserCreationForm
+    template_name = "registration/signup.html"
+    success_url = reverse_lazy("mood_list")
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        login(self.request, self.object)  # auto-login nakon registracije
+        return response
