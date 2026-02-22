@@ -27,32 +27,4 @@
   <p>Nema mood zapisa.</p>
 {% endfor %}
 
-<hr>
-
-<h2>Tags</h2>
-{# Ako imaš tag create/list rute kasnije, ovdje ćemo dodati linkove #}
-
-{% for tag in tags %}
-  <span style="display:inline-block; padding:4px 8px; border:1px solid #ccc; margin:2px;">
-    {{ tag.name }}
-  </span>
-{% empty %}
-  <p>Nema tagova.</p>
-{% endfor %}
-
-<hr>
-
-<h2>Journal entries (latest)</h2>
-{# Ako imaš journal create/list rute kasnije, ovdje ćemo dodati linkove #}
-
-{% for j in journals %}
-  <div style="border:1px solid #ddd; padding:10px; margin:8px 0;">
-    <strong>{{ j.title }}</strong><br>
-    <small>{{ j.created_at }}</small>
-    <p>{{ j.content|truncatechars:200 }}</p>
-  </div>
-{% empty %}
-  <p>Nema journal entry-ja.</p>
-{% endfor %}
-
 {% endblock %}
