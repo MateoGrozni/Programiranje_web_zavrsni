@@ -1,12 +1,70 @@
 {% extends "main/base.html" %}
 {% block content %}
-<h1>Add new mood</h1>
 
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Save mood</button>
-</form>
+<div class="mh-wrap">
 
-<p><a href="{% url 'mood_list' %}">Back to list</a></p>
+  <section class="mh-hero">
+    <h1 class="mh-title">Novi unos raspoloženja</h1>
+    <p class="mh-sub">
+      Unesi trenutno raspoloženje i razinu stresa od 1 do 10. Po želji dodaj tagove koji najbolje opisuju emocije.
+    </p>
+  </section>
+
+  <section class="mh-card" style="margin-top:14px;">
+    <form method="post" class="mh-form">
+      {% csrf_token %}
+
+      {{ form.non_field_errors }}
+
+      <p>
+        {{ form.mood.label_tag }}
+        {{ form.mood }}
+        {{ form.mood.errors }}
+      </p>
+
+      <p>
+        {{ form.stress.label_tag }}
+        {{ form.stress }}
+        {{ form.stress.errors }}
+      </p>
+
+      <p>
+        {{ form.note.label_tag }}
+        {{ form.note }}
+        {{ form.note.errors }}
+      </p>
+
+      {% if form.tags %}
+        <div style="margin-top: 12px;">
+          <h3 style="margin:0 0 8px; font-size:16px;">Tagovi</h3>
+          <p class="mh-muted" style="margin:0 0 8px;">
+            Odaberi emocije koje trenutno osjećaš (možeš više njih).
+          </p>
+          {{ form.tags.errors }}
+          {{ form.tags }}
+        </div>
+      {% endif %}
+
+      <div class="mh-actions">
+        <button type="submit" class="mh-btn mh-btn-primary">Spremi</button>
+        <a href="{% url 'mood_list' %}" class="mh-btn mh-btn-ghost">Natrag na listu</a>
+      </div>
+    </form>
+  </section>
+
+  <section class="mh-side" style="margin-top:14px;">
+    <h2 style="margin:0 0 10px; font-size:18px;">Mali savjet</h2>
+    <p class="mh-muted" style="margin:0;">
+      Pokušaj uz svaki unos dodati barem 1 tag (npr. #anksioznost, #tuga, #sreća).
+      Kasnije ćeš moći lakše vidjeti obrasce.
+    </p>
+    <div class="mh-tip">
+      <p class="mh-muted" style="margin:0;">
+        Pitanje: “Što je danas najviše utjecalo na mene?”
+      </p>
+    </div>
+  </section>
+
+</div>
+
 {% endblock %}

@@ -1,20 +1,61 @@
 {% extends "main/base.html" %}
-
 {% block content %}
-<h1>Delete mood entry</h1>
 
-<p>Are you sure you want to delete this entry?</p>
+<div class="mh-wrap">
 
-<ul>
-  <li>Mood: {{ object.mood }}</li>
-  <li>Stress: {{ object.stress }}</li>
-  <li>Note: {{ object.note }}</li>
-</ul>
+  <section class="mh-hero">
+    <h1 class="mh-title">Brisanje raspoloženja</h1>
+    <p class="mh-sub">
+      Ova radnja je trajna. Nakon brisanja zapis se više ne može vratiti.
+    </p>
+  </section>
 
-<form method="post">
-  {% csrf_token %}
-  <button type="submit">Yes, delete</button>
-</form>
+  <section class="mh-card" style="margin-top:14px;">
 
-<p><a href="{% url 'mood_list' %}">Cancel</a></p>
+    <h2 style="margin:0 0 10px; font-size:18px;">
+      Jesi li siguran da želiš obrisati ovaj zapis?
+    </h2>
+
+    <div class="mh-item" style="margin-top:10px;">
+      <div class="mh-row">
+        <span class="mh-pill">Raspoloženje: {{ object.mood }}/10</span>
+        <span class="mh-pill">Stres: {{ object.stress }}/10</span>
+        <span class="mh-pill">
+          {{ object.created_at|date:"d.m.Y H:i" }}
+        </span>
+      </div>
+
+      {% if object.note %}
+        <p class="mh-note">{{ object.note }}</p>
+      {% else %}
+        <p class="mh-note mh-muted">Bez bilješke.</p>
+      {% endif %}
+
+      {% if object.tags.all %}
+        <div class="mh-tags">
+          {% for tag in object.tags.all %}
+            <span class="mh-tag">#{{ tag.name }}</span>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <form method="post" style="margin-top:14px;">
+      {% csrf_token %}
+
+      <div class="mh-actions">
+        <button type="submit" class="mh-btn mh-btn-primary">
+          Obriši zapis
+        </button>
+
+        <a href="{% url 'mood_list' %}" class="mh-btn mh-btn-ghost">
+          Odustani
+        </a>
+      </div>
+    </form>
+
+  </section>
+
+</div>
+
 {% endblock %}

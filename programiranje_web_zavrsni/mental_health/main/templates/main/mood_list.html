@@ -1,27 +1,98 @@
 {% extends "main/base.html" %}
 {% block content %}
-<h1>Mood Entries</h1>
 
-{% if user.is_authenticated %}
-  <p>
-    <a href="{% url 'mood_create' %}">+ Add new mood entry</a>
-  </p>
+<div class="mh-wrap">
 
-{% endif %}
-
-<hr>
-
-{% for mood in moods %}
-    <p>
-        User: {{ mood.user }} |
-        Mood: {{ mood.mood }} |
-        Stress: {{ mood.stress }} |
-        Note: {{ mood.note }}
-        <a href="{% url 'mood_edit' mood.pk %}">Edit</a> |
-        <a href="{% url 'mood_delete' mood.pk %}">Delete</a>
+  <section class="mh-hero">
+    <h1 class="mh-title">Zapisi raspoloženja</h1>
+    <p class="mh-sub">
+      Ovdje su svi tvoji zapisi. Možeš pretraživati po bilješci ili tagovima.
     </p>
-{% empty %}
-    <p>Nema podataka.</p>
-{% endfor %}
+  </section>
+
+  <section class="mh-card" style="margin-top:14px;">
+    <h2 style="margin:0 0 10px; font-size:18px;">Pretraživanje</h2>
+
+    <form method="get" class="mh-form" style="margin-top: 8px;">
+      <p style="margin:0;">
+        <input
+          type="text"
+          name="q"
+          value="{{ q }}"
+          placeholder="Pretraži bilješke ili tagove (npr. anksioznost, sreća...)"
+        />
+      </p>
+
+      <div class="mh-actions">
+        <button type="submit" class="mh-btn mh-btn-primary">Pretraži</button>
+
+        {% if q %}
+          <a class="mh-btn mh-btn-ghost" href="{% url 'mood_list' %}">Clear</a>
+        {% endif %}
+      </div>
+    </form>
+
+    {% if user.is_authenticated %}
+      <div class="mh-actions" style="margin-top: 14px;">
+        <a class="mh-btn mh-btn-ghost" href="{% url 'mood_create' %}">+ Dodaj novi zapis u bazu</a>
+      </div>
+    {% endif %}
+  </section>
+
+  <section class="mh-card" style="margin-top:14px;">
+    <h2 style="margin:0 0 10px; font-size:18px;">
+      {% if q %}Rezultati{% else %}Svi zapisi{% endif %}
+    </h2>
+    {% if q %}
+      <p class="mh-muted">Pretraga za: <strong>{{ q }}</strong></p>
+    {% else %}
+      <p class="mh-muted">Pregled svih unosa, od najnovijeg prema starijem.</p>
+    {% endif %}
+
+    <div class="mh-list">
+      {% for mood in moods %}
+        <article class="mh-item">
+
+          <div class="mh-row">
+            <span class="mh-pill">Mood: {{ mood.mood }}/10</span>
+            <span class="mh-pill">Stress: {{ mood.stress }}/10</span>
+            <span class="mh-pill">{{ mood.created_at|date:"d.m.Y H:i" }}</span>
+          </div>
+
+          {% if mood.note %}
+            <p class="mh-note">{{ mood.note }}</p>
+          {% else %}
+            <p class="mh-note mh-muted">Bez bilješke.</p>
+          {% endif %}
+
+          {% if mood.tags.all %}
+            <div class="mh-tags">
+              {% for tag in mood.tags.all %}
+                <span class="mh-tag">#{{ tag.name }}</span>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <div class="mh-actions" style="margin-top: 12px;">
+            <a class="mh-btn mh-btn-ghost" href="{% url 'mood_edit' mood.pk %}">Edit</a>
+            <a class="mh-btn mh-btn-ghost" href="{% url 'mood_delete' mood.pk %}">Delete</a>
+          </div>
+
+        </article>
+      {% empty %}
+        <div class="mh-item">
+          <p class="mh-note" style="margin:0;">Nema podataka.</p>
+          {% if q %}
+            <p class="mh-muted" style="margin-top:6px;">Nema rezultata za ovu pretragu.</p>
+          {% else %}
+            <p class="mh-muted" style="margin-top:6px;">Kad dodaš unose, ovdje će se prikazati.</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
+  </section>
+
+</div>
 
 {% endblock %}

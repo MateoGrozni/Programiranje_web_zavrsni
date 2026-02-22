@@ -1,30 +1,82 @@
 {% extends "main/base.html" %}
-
-<h1>Dashboard</h1>
 {% block content %}
-<form method="get" style="margin-bottom: 16px;">
-  <input type="text" name="q" value="{{ q }}" placeholder="Search moods, tags, journals..." />
-  <button type="submit">Search</button>
-  {% if q %}
-    <a href="{% url 'dashboard' %}">Clear</a>
-  {% endif %}
-</form>
 
-<hr>
+<div class="mh-wrap">
 
-<h2>Moods (latest)</h2>
-<p><a href="{% url 'mood_create' %}">+ Add mood</a> | <a href="{% url 'mood_list' %}">View all</a></p>
+  <section class="mh-hero">
+    <h1 class="mh-title">Početna</h1>
+    <p class="mh-sub">
+      Ovdje možeš vidjeti svoje zadnje zapise raspoloženja.
+      Redovitim praćenjem lakše ćeš primijetiti obrasce i promjene.
+    </p>
+  </section>
 
-{% for mood in moods %}
-  <p>
-    Mood: {{ mood.mood }} |
-    Stress: {{ mood.stress }} |
-    Note: {{ mood.note }}
-    | <a href="{% url 'mood_edit' mood.pk %}">Edit</a>
-    | <a href="{% url 'mood_delete' mood.pk %}">Delete</a>
-  </p>
-{% empty %}
-  <p>Nema mood zapisa.</p>
-{% endfor %}
+  <div class="mh-grid">
+
+    <!-- LEFT: MOOD LIST -->
+    <section class="mh-card">
+      <h2 style="margin:0 0 10px; font-size:18px;">Zadnji unosi raspoloženja</h2>
+      <p class="mh-muted">Prikaz posljednjih nekoliko zapisa.</p>
+
+      <div class="mh-list">
+        {% for mood in moods %}
+          <article class="mh-item">
+
+            <div class="mh-row">
+              <span class="mh-pill">Raspoloženje: {{ mood.mood }}/10</span>
+              <span class="mh-pill">Stres: {{ mood.stress }}/10</span>
+              <span class="mh-pill">
+                {{ mood.created_at|date:"d.m.Y H:i" }}
+              </span>
+            </div>
+
+            {% if mood.note %}
+              <p class="mh-note">{{ mood.note }}</p>
+            {% else %}
+              <p class="mh-note mh-muted">Bez bilješke.</p>
+            {% endif %}
+
+            {% if mood.tags.all %}
+              <div class="mh-tags">
+                {% for tag in mood.tags.all %}
+                  <span class="mh-tag">#{{ tag.name }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+          </article>
+        {% empty %}
+          <div class="mh-item">
+            <p class="mh-note" style="margin:0;">Nema mood zapisa.</p>
+            <p class="mh-muted" style="margin-top:6px;">
+              Kad napraviš unos, ovdje će se prikazati.
+            </p>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <!-- RIGHT: SIDE PANEL -->
+    <aside class="mh-side">
+      <h2 style="margin:0 0 10px; font-size:18px;">Mali savjet</h2>
+
+      <p class="mh-muted">
+        Dodavanje emocijskih tagova poput
+        <strong>#sreća</strong>, <strong>#tuga</strong> ili
+        <strong>#anksioznost</strong>
+        pomoći će ti kasnije u analizi raspoloženja.
+      </p>
+
+      <div class="mh-tip">
+        <p class="mh-muted" style="margin:0;">
+          Pitanje za danas:
+          “Što je danas najviše utjecalo na moje raspoloženje?”
+        </p>
+      </div>
+    </aside>
+
+  </div>
+
+</div>
 
 {% endblock %}

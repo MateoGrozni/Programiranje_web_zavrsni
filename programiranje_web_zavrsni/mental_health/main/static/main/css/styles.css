@@ -1,0 +1,212 @@
+:root {
+  --border: #e9e9e9;
+  --muted: #6b7280;
+  --text: #111827;
+  --bg: #ffffff;
+  --soft: #f3f4f6;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #fafafa;
+  color: var(--text);
+}
+
+/* Layout containers */
+.mh-wrap {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.mh-hero, .mh-card, .mh-side {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.04);
+}
+
+.mh-hero { padding: 22px; }
+.mh-card, .mh-side { padding: 18px; }
+
+.mh-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+@media (min-width: 860px) {
+  .mh-grid { grid-template-columns: 1.25fr .75fr; }
+}
+
+/* Typography */
+.mh-title {
+  margin: 0 0 6px;
+  font-size: 28px;
+  letter-spacing: -.2px;
+}
+
+.mh-sub {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.mh-muted {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 0;
+}
+
+/* Lists / items */
+.mh-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.mh-item {
+  border: 1px solid #f0f0f0;
+  border-radius: 14px;
+  padding: 12px;
+  background: #fcfcfc;
+}
+
+.mh-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.mh-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--soft);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.mh-note {
+  margin: 8px 0 0;
+  color: #374151;
+  line-height: 1.5;
+}
+
+/* Tags */
+.mh-tags {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.mh-tag {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+}
+
+/* Forms */
+.mh-form p { margin: 10px 0; }
+
+.mh-form input,
+.mh-form textarea,
+.mh-form select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+}
+
+.mh-form textarea { min-height: 110px; }
+
+/* Buttons */
+.mh-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.mh-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+.mh-btn-primary {
+  background: #111827;
+  color: #fff;
+}
+
+.mh-btn-primary:hover { opacity: .92; }
+
+.mh-btn-ghost {
+  background: #fff;
+  color: #111827;
+  border-color: #e5e7eb;
+}
+
+.mh-btn-ghost:hover { background: #f9fafb; }
+
+/* Small tip block */
+.mh-tip {
+  border-left: 4px solid #111827;
+  padding-left: 12px;
+  margin-top: 10px;
+}
+
+.navbar {
+  background: #111827;
+  color: white;
+  padding: 14px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-left a {
+  color: #cfcfcf;
+  margin-right: 14px;
+  text-decoration: none;
+  font-weight: 600;
+  padding-bottom: 2px;
+}
+
+.nav-left a.active {
+  color: white;
+  border-bottom: 2px solid #4CAF50;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-user {
+  font-weight: 600;
+}
+
+/* container override */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
