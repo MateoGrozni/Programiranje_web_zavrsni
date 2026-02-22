@@ -1,103 +1,43 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Login • Mental Health Tracker</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+{% extends "main/base.html" %}
+{% block content %}
 
-    .card {
-      width: 360px;
-      background: white;
-      border: 1px solid #e5e5e5;
-      border-radius: 12px;
-      padding: 22px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-    }
+<div class="mh-wrap">
+  <div class="mh-center">
 
-    h1 {
-      margin: 0 0 14px 0;
-      font-size: 22px;
-    }
+    <section class="mh-card mh-auth-card">
+      <h1 class="mh-auth-title">Prijava</h1>
+      <p class="mh-muted">Upiši svoje podatke za nastavak.</p>
 
-    .muted {
-      color: #666;
-      margin: 0 0 18px 0;
-      font-size: 14px;
-    }
+      <form method="post" class="mh-form" style="margin-top: 10px;">
+        {% csrf_token %}
 
-    form p {
-      margin: 10px 0;
-    }
+        {{ form.non_field_errors }}
 
-    label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 6px;
-    }
+        <p>
+          {{ form.username.label_tag }}
+          {{ form.username }}
+          {{ form.username.errors }}
+        </p>
 
-    input {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      box-sizing: border-box;
-    }
+        <p>
+          {{ form.password.label_tag }}
+          {{ form.password }}
+          {{ form.password.errors }}
+        </p>
 
-    .btn {
-      width: 100%;
-      margin-top: 12px;
-      padding: 10px;
-      border: none;
-      border-radius: 10px;
-      background: #111;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
+        <div class="mh-actions">
+          <button class="mh-btn mh-btn-primary" type="submit" style="width:100%; justify-content:center;">
+            Prijava
+          </button>
+        </div>
+      </form>
 
-    .links {
-      margin-top: 14px;
-      font-size: 14px;
-      text-align: center;
-    }
+      <div class="mh-auth-links">
+        <p style="margin:0;">Nemaš račun? <a href="{% url 'signup' %}">Registriraj se</a></p>
+      </div>
+    </section>
 
-    .links a {
-      color: #111;
-      font-weight: bold;
-      text-decoration: none;
-    }
-
-    .errorlist {
-      color: #b00020;
-      margin: 8px 0;
-      padding-left: 18px;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="card">
-    <h1>Login</h1>
-    <p class="muted">Upiši svoje podatke za nastavak.</p>
-
-    <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button class="btn" type="submit">Prijava</button>
-    </form>
-
-    <div class="links">
-      <p>Nemaš račun? <a href="{% url 'signup' %}">Registiraj se</a></p>
-    </div>
   </div>
+</div>
 
-</body>
-</html>
+{% endblock %}

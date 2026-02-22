@@ -1,19 +1,6 @@
 from django.conf import settings
 from django.db import models
-
-
-class Profile(models.Model):
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name="profile",
-    )
-    date_of_birth = models.DateField(null=True, blank=True)
-    timezone = models.CharField(max_length=64, default="Europe/Zagreb")
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Profile: {self.user.username}"
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Tag(models.Model):
@@ -21,6 +8,11 @@ class Tag(models.Model):
 
     class Meta:
         ordering = ["name"]
+
+    def save(self, *args, **kwargs):
+        # mala normalizacija imena taga
+        self.name = self.name.strip()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -32,8 +24,15 @@ class MoodEntry(models.Model):
         on_delete=models.CASCADE,
         related_name="mood_entries",
     )
-    mood = models.PositiveSmallIntegerField()
-    stress = models.PositiveSmallIntegerField()
+
+    # skala 1–10 (promijeni ako želiš 1–5)
+    mood = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(10)]
+    )
+    stress = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(10)]
+    )
+
     note = models.TextField(blank=True)
 
     tags = models.ManyToManyField(
@@ -51,4 +50,8 @@ class MoodEntry(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.user.username} mood={self.mood} stress={self.stress} ({self.created_at:%Y-%m-%d})"
+        return (
+            f"{self.user.username} "
+            f"mood={self.mood} stress={self.stress} "
+            f"({self.created_at:%Y-%m-%d})"
+        )

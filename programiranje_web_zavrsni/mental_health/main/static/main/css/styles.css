@@ -210,3 +210,45 @@ body {
   margin: 0 auto;
   padding: 24px 16px;
 }
+
+/* AUTH (login/signup) */
+.mh-center {
+  min-height: calc(100vh - 72px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mh-auth-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 22px;
+}
+
+.mh-auth-title {
+  margin: 0 0 6px;
+  font-size: 22px;
+}
+
+.mh-auth-links {
+  margin-top: 14px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.mh-auth-links a {
+  color: var(--text);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.mh-auth-links a:hover {
+  text-decoration: underline;
+}
+
+/* Django error list */
+.errorlist {
+  color: #b00020;
+  margin: 8px 0;
+  padding-left: 18px;
+}
