@@ -5,13 +5,13 @@ from django.db.models import Q
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, TemplateView, UpdateView
-
-from .forms import MoodEntryForm, MeditationSessionForm
-from .models import MoodEntry, MeditationSession
+from .forms import MeditationSessionForm, MoodEntryForm
+from .models import MeditationSession, MoodEntry
 
 
 def home(request):
     return redirect("dashboard" if request.user.is_authenticated else "login")
+
 
 
 class MoodListView(LoginRequiredMixin, ListView):
@@ -19,8 +19,11 @@ class MoodListView(LoginRequiredMixin, ListView):
     context_object_name = "moods"
     login_url = "login"
 
+    def get_search_query(self):
+        return (self.request.GET.get("q") or "").strip()
+
     def get_queryset(self):
-        q = (self.request.GET.get("q") or "").strip()
+        q = self.get_search_query()
 
         qs = (
             MoodEntry.objects
@@ -36,7 +39,7 @@ class MoodListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx["q"] = (self.request.GET.get("q") or "").strip()
+        ctx["q"] = self.get_search_query()
         return ctx
 
 
@@ -45,6 +48,7 @@ class MoodCreateView(LoginRequiredMixin, CreateView):
     form_class = MoodEntryForm
     template_name = "main/mood_form.html"
     success_url = reverse_lazy("mood_list")
+    login_url = "login"
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -53,9 +57,10 @@ class MoodCreateView(LoginRequiredMixin, CreateView):
 
 class MoodUpdateView(LoginRequiredMixin, UpdateView):
     model = MoodEntry
-    form_class = MoodEntryForm  # bolje nego fields=[...] jer zadržavaš isti UX/validaciju
+    form_class = MoodEntryForm
     template_name = "main/mood_form.html"
     success_url = reverse_lazy("mood_list")
+    login_url = "login"
 
     def get_queryset(self):
         return MoodEntry.objects.filter(user=self.request.user)
@@ -65,9 +70,11 @@ class MoodDeleteView(LoginRequiredMixin, DeleteView):
     model = MoodEntry
     template_name = "main/mood_confirm_delete.html"
     success_url = reverse_lazy("mood_list")
+    login_url = "login"
 
     def get_queryset(self):
         return MoodEntry.objects.filter(user=self.request.user)
+
 
 
 class SignupView(CreateView):
@@ -77,12 +84,13 @@ class SignupView(CreateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        login(self.request, self.object)  # auto-login nakon registracije
+        login(self.request, self.object)
         return response
 
 
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = "main/dashboard.html"
+    login_url = "login"
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
@@ -93,6 +101,8 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             .order_by("-id")[:10]
         )
         return ctx
+
+
 
 class MeditationListView(LoginRequiredMixin, ListView):
     template_name = "main/meditation_list.html"
@@ -112,11 +122,11 @@ class MeditationCreateView(LoginRequiredMixin, CreateView):
     form_class = MeditationSessionForm
     template_name = "main/meditation_form.html"
     success_url = reverse_lazy("meditation_list")
+    login_url = "login"
 
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
-
 
 
 class MeditationDeleteView(LoginRequiredMixin, DeleteView):
@@ -124,6 +134,6 @@ class MeditationDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy("meditation_list")
     login_url = "login"
     http_method_names = ["post"]
-    
+
     def get_queryset(self):
         return MeditationSession.objects.filter(user=self.request.user)
