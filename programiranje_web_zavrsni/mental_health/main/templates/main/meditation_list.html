@@ -1,0 +1,56 @@
+{% extends "main/base.html" %}
+{% block content %}
+
+<div class="mh-wrap">
+
+  <section class="mh-hero">
+    <h1 class="mh-title">Meditacije</h1>
+    <p class="mh-sub">
+      Ovdje su sve tvoje meditacije. Možeš brzo dodati novu sesiju.
+    </p>
+  </section>
+
+  <section class="mh-card" style="margin-top:14px;">
+    <h2 style="margin:0 0 10px; font-size:18px;">Dodaj novu meditaciju</h2>
+
+    {% if user.is_authenticated %}
+      <div class="mh-actions" style="margin-top: 8px;">
+        <a class="mh-btn mh-btn-ghost" href="{% url 'meditation_create' %}">+ Dodaj novu meditaciju</a>
+      </div>
+    {% endif %}
+  </section>
+
+  <section class="mh-card" style="margin-top:14px;">
+    <h2 style="margin:0 0 10px; font-size:18px;">Sve meditacije</h2>
+    <p class="mh-muted">Pregled svih sesija, od najnovije prema starijoj.</p>
+
+    <div class="mh-list">
+      {% for s in sessions %}
+        <article class="mh-item">
+
+          <div class="mh-row">
+            <span class="mh-pill">Trajanje: {{ s.duration_minutes }} min</span>
+            <span class="mh-pill">{{ s.created_at|date:"d.m.Y H:i" }}</span>
+          </div>
+
+          <div class="mh-actions" style="margin-top: 12px;">
+            <form method="post" action="{% url 'meditation_delete' s.pk %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="mh-btn mh-btn-ghost">Delete</button>
+            </form>
+          </div>
+
+        </article>
+      {% empty %}
+        <div class="mh-item">
+          <p class="mh-note" style="margin:0;">Nema podataka.</p>
+          <p class="mh-muted" style="margin-top:6px;">Kad dodaš meditacije, ovdje će se prikazati.</p>
+        </div>
+      {% endfor %}
+    </div>
+
+  </section>
+
+</div>
+
+{% endblock %}

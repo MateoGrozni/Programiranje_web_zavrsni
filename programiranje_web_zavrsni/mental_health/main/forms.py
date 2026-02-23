@@ -1,5 +1,5 @@
 from django import forms
-from .models import MoodEntry, Tag
+from .models import MoodEntry, Tag, MeditationSession
 
 class MoodEntryForm(forms.ModelForm):
     tags = forms.ModelMultipleChoiceField(
@@ -11,3 +11,8 @@ class MoodEntryForm(forms.ModelForm):
     class Meta:
         model = MoodEntry
         fields = ["mood", "stress", "note", "tags"]
+
+class MeditationSessionForm(forms.ModelForm):
+    class Meta:
+        model = MeditationSession
+        fields = ["duration_minutes"]

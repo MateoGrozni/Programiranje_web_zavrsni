@@ -25,6 +25,10 @@
            class="{% if request.path == '/moods/' %}active{% endif %}">
            Raspoloženja
         </a>
+        <a href="{% url 'meditation_list' %}"
+           class="{% if request.path == '/meditations/' %}active{% endif %}">
+           Meditacije
+        </a>
     </div>
 
     <div class="nav-right">

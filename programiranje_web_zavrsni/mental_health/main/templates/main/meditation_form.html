@@ -1,0 +1,30 @@
+{% extends "main/base.html" %}
+{% block content %}
+
+<div class="mh-wrap">
+
+  <section class="mh-hero">
+    <h1 class="mh-title">
+      {% if object %}Uredi meditaciju{% else %}Nova meditacija{% endif %}
+    </h1>
+    <p class="mh-sub">
+      Unesi trajanje meditacije u minutama. Vrijeme kreiranja se sprema automatski.
+    </p>
+  </section>
+
+  <section class="mh-card" style="margin-top:14px;">
+    <form method="post" class="mh-form">
+      {% csrf_token %}
+
+      {{ form.as_p }}
+
+      <div class="mh-actions" style="margin-top: 12px;">
+        <button type="submit" class="mh-btn mh-btn-primary">
+          {% if object %}Spremi promjene{% else %}Spremi{% endif %}
+        </button>
+        <a class="mh-btn mh-btn-ghost" href="{% url 'meditation_list' %}">Natrag</a>
+      </div>
+    </form>
+  </section>
+</div>
+{% endblock %}

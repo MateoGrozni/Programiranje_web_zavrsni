@@ -6,8 +6,8 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, TemplateView, UpdateView
 
-from .forms import MoodEntryForm
-from .models import MoodEntry
+from .forms import MoodEntryForm, MeditationSessionForm
+from .models import MoodEntry, MeditationSession
 
 
 def home(request):
@@ -93,3 +93,37 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             .order_by("-id")[:10]
         )
         return ctx
+
+class MeditationListView(LoginRequiredMixin, ListView):
+    template_name = "main/meditation_list.html"
+    context_object_name = "sessions"
+    login_url = "login"
+
+    def get_queryset(self):
+        return (
+            MeditationSession.objects
+            .filter(user=self.request.user)
+            .order_by("-created_at", "-id")
+        )
+
+
+class MeditationCreateView(LoginRequiredMixin, CreateView):
+    model = MeditationSession
+    form_class = MeditationSessionForm
+    template_name = "main/meditation_form.html"
+    success_url = reverse_lazy("meditation_list")
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+
+
+class MeditationDeleteView(LoginRequiredMixin, DeleteView):
+    model = MeditationSession
+    success_url = reverse_lazy("meditation_list")
+    login_url = "login"
+    http_method_names = ["post"]
+    
+    def get_queryset(self):
+        return MeditationSession.objects.filter(user=self.request.user)
